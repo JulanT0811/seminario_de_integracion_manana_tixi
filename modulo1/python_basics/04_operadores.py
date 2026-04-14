@@ -26,3 +26,20 @@ n//= 2
 print("n//2=", n)
 n**= 2
 print("n**2=", n)
+
+#Operadores de comparación
+print("===============================")    
+print("Operadores de comparación")
+print("a == b", a == b)
+print("a != b", a != b)
+print("a > b", a > b)
+print("a < b", a < b)
+print("a >= b", a >= b)
+print("a <= b", a <= b)
+#Operaciones lógicas
+print("===============================")        
+print("Operaciones lógicas")
+x = True
+y = False   
+
+
