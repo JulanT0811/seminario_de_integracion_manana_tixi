@@ -41,5 +41,3 @@ while True:
         break
     else:
         print("Contraseña incorrecta")
-
-
