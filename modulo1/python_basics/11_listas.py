@@ -37,3 +37,18 @@ eliminado = frutas.pop(0)
 print(frutas)
 del frutas [0]
 print(frutas)
+
+print("buscar vlores en los elementos de un lista ")
+print("kiwi" in frutas)
+print(frutas.index("kiwi"))
+print(frutas.count("kiwi"))
+
+print("ordenar una lista")  
+numeros_desordenados = [3,2,6,34,9,0,1,2]
+print(numeros_desordenados)
+numeros_desordenados.sort()
+print(numeros_desordenados)
+numeros_desordenados.sort(reverse=True)
+print(numeros_desordenados)
+ordenada = sorted(numeros_desordenados)
+print(numeros_desordenados)
