@@ -1,60 +1,55 @@
-print("Condicionales simples")
-edad = input("Incluye su edad: ")
-if int(edad) >= 18:
+print("condicionales simples")
+edad = input("Incluye su edad?")
+if(int(edad)>= 18):
     print("Mayor de edad")
 
-
-print("Condicionales dos caminos")
-temperatura = input("Incluye temperatura.? ")
-if int(temperatura) >= 38:
-    print("temperatura alta")
+print("condicionales dos caminos")
+temperatura = input("Incluye temperatura?")
+if(int(temperatura)>= 18):
+    print("Temperatura alta")
 else:
-    print("temperatura baja")
+    print("Temperatura normal") 
 
-print("Condicionales múltiples")
-nota = input("Incluye tu nota: ")
-if int(nota) >= 90:
-    print("Exelente")
-elif int(nota) >= 80:
-    print("Bueno")
-elif int(nota) >= 70:
-    print("Aprobado")
-else:
-    print("Reprobado")
 
-print("Condicionales if anidados") 
-tiene_reserva = True 
+    print("condicionales multiples")
+    nota = input("Incluye nota?")
+    if(int(nota)>= 90):
+        print("Excelente")
+    elif(int(nota)>= 80):
+        print("Bueno")
+    elif(int(nota)>= 70):
+        print("Aprobado")
+    else:
+        print("Reprobado")
+
+
+print("condicionales if anidados")
+tiene_reseeva = True
 dinero = 25
-plato="pizza"
-if tiene_reserva:
-    if (dinero >= 20):
-        if plato == "pizza":
-            print("Tu pizza cuesata $20. Pedido cofirmado ")
+plato = 'pizza'
+if(tiene_reseeva):
+    if(dinero >= 20):
+        if(plato == 'pizza'):
+            print("Tu pizza cuesta $20, Pedido confirmado")
         else:
             print("plato disponible")
     else:
-        print("Dinero insuficiente")
-else:
-    print("No tienes reserva")  
+        print("dinero insuficiente")
+else:    
+    print("No tienes reserva")
 
 
-
-
-print("--- Sistema de Evaluación de Bonos ---")
-
-
-antiguedad = 2     
-desempeño = 9      
-salario = 950      
-
-if antiguedad > 1:
-    if desempeño >= 8:
-        if salario < 1000:
-            print("Resultado: Bono de $200")
-        else:
-            
-            print("Resultado: Bono de $100")
+print("Calculo de bono:")
+antiguedad = input("Ingrese años de antiguedad: ")
+if(int(antiguedad) > 1):
+    desempeño = input("Ingrese su calificacion de desempeño: ")
+    if(int(desempeño)>= 8):
+        salario=input("Ingrese su salario: ")
+        if(int(salario) < 1000):
+            print("Su bono es de $200")
+            print(f"Su salario total es de: {int(salario)+200}")
+        if(int(salario)>= 1000):
+            print("Su bono es de $100")
+            print(f"Su salario total es de: {int(salario)+100}")
     else:
-        print("Resultado: No recibe bono por desempeño menor a 8")
-else:
-    print("Resultado: No elegible por antigüedad insuficiente")
+        print("No recibe Bono")

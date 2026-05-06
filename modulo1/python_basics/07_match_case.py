@@ -1,24 +1,23 @@
-print("Match-Case")
-comando = input("Comando proceso iniciar/parar/reiniciar")
+print("Match Case")
+comando = input("Comando proceso iniciar/parar/reiniciar: ")
 match comando:
     case "iniciar":
-        print("Sistema iniciado")
+        print("Sistema iniciando")
     case "parar":
-        print("Detenido")
+        print("deteniendose")
     case "reiniciar":
-        print("Reinicio de sistema ")
+        print("reiniciando el sistema")
     case _:
-        print(f"Comando '{comando}' no reconocido: ")
+        print(f"Comando '{comando}' no reconocido")
 
-
-print("match condicional")
-numero = 7 
+print("match condiciones")
+numero = 7
 match numero:
-    case n if n < 0:
-        print(f"{n} es negativo")
+    case n if n<0:
+        print(f"El numero {n} es negativo")
     case 0:
-        print(f"{n} es cero")
-    case n if n % 2 == 0:
-        print(f"{n} es par")
-    case n :
-        print(f"{n} es positivo e impar")        
+        print("Es cero")
+    case n if n%2==0:
+        print(f"El numero {n} es par")
+    case n:
+        print(f"{n} es positivo e impar")
