@@ -1,8 +1,9 @@
 # store/tests/test_users.py
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APIClient
 
-from .helpers import create_user, create_staff, auth_client
+from .helpers import create_user, create_staff, auth_client, get_tokens
 
 
 class ProfileTests(TestCase):
@@ -20,6 +21,30 @@ class ProfileTests(TestCase):
         resp = self.client.patch('/api/users/profile/', {'first_name': 'Carlos'})
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.data['first_name'], 'Carlos')
+
+    def test_profile_with_token_in_query_string(self):
+        access, _ = get_tokens(self.user)
+        client = APIClient()
+        resp = client.get(f'/api/users/profile/?Authorization=Bearer%20{access}')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['username'], 'carlos')
+
+    def test_profile_with_percent_encoded_authorization_header(self):
+        access, _ = get_tokens(self.user)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer%20{access}')
+        resp = client.get('/api/users/profile/')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['username'], 'carlos')
+
+    def test_query_string_falls_back_when_header_is_malformed(self):
+        access, _ = get_tokens(self.user)
+        client = APIClient()
+        malformed_header = f'Bearer badtoken","access":"{access}'
+        client.credentials(HTTP_AUTHORIZATION=malformed_header)
+        resp = client.get(f'/api/users/profile/?Authorization=Bearer%20{access}')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(resp.data['username'], 'carlos')
 
     def test_change_password_success(self):
         resp = self.client.post('/api/users/change-password/', {

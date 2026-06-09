@@ -1,8 +1,9 @@
 # store/tests/test_categories.py
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APIClient
 
-from .helpers import create_user, create_staff, auth_client, create_category
+from .helpers import create_user, create_staff, auth_client, create_category, get_tokens
 
 
 class CategoryPermissionTests(TestCase):
@@ -32,6 +33,16 @@ class CategoryPermissionTests(TestCase):
             'name': 'Home', 'slug': 'home', 'is_active': True
         })
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+    def test_staff_can_create_with_explicit_token(self):
+        access, _ = get_tokens(self.staff)
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION=f'Bearer {access}')
+        resp = client.post('/api/categories/', {
+            'name': 'Sports', 'slug': 'sports', 'is_active': True
+        })
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.data['name'], 'Sports')
 
     def test_staff_can_delete(self):
         resp = auth_client(self.staff).delete(f'/api/categories/{self.category.id}/')
