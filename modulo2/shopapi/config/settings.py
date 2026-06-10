@@ -106,11 +106,28 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # --- Email -----------------------------------------------------------
 EMAIL_BACKEND       = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST          = config('EMAIL_HOST',    default='smtp.gmail.com')
-EMAIL_PORT          = config('EMAIL_PORT', default=587)
-EMAIL_USE_TLS       = config('EMAIL_USE_TLS', default=True)
+EMAIL_PORT          = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS       = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default='ShopAPI <noreply@shopapi.local>')
+
+# Windows fix: SSLCertVerificationError con Gmail STARTTLS (puerto 587)
+# Django pasa ssl_context a starttls() — lo sobreescribimos con uno sin verificación.
+import ssl as _ssl
+_unverified_ctx = _ssl.create_default_context()
+_unverified_ctx.check_hostname = False
+_unverified_ctx.verify_mode   = _ssl.CERT_NONE
+
+from django.core.mail.backends import smtp as _smtp_backend
+_OrigSmtp = _smtp_backend.EmailBackend
+
+class _PatchedEmailBackend(_OrigSmtp):
+    @property
+    def ssl_context(self):
+        return _unverified_ctx
+
+_smtp_backend.EmailBackend = _PatchedEmailBackend
 
 # URL del frontend para armar enlaces en correos (recuperación de contraseña)
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:3000')
