@@ -14,6 +14,9 @@ const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'))
 const CatalogPage = lazy(() => import('../pages/catalog/CatalogPage'))
 const ProductDetailPage = lazy(() => import('../pages/catalog/ProductDetailPage'))
 const CartPage = lazy(() => import('../pages/cart/CartPage'))
+const CheckoutPage = lazy(() => import('../pages/orders/CheckoutPage'))
+const OrdersPage = lazy(() => import('../pages/orders/OrdersPage'))
+const OrderDetailPage = lazy(() => import('../pages/orders/OrderDetailPage'))
 
 // El resto de páginas todavía no existen: se implementan en módulos posteriores
 // (Catálogo → 4/5, Carrito → 6, Órdenes → 7, Perfil → 8, Admin → 9-13) y cada uno
@@ -65,10 +68,18 @@ export default function AppRouter() {
               }
             />
             <Route
+              path="/orders/new"
+              element={
+                <ProtectedRoute>
+                  <CheckoutPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/orders"
               element={
                 <ProtectedRoute>
-                  <PlaceholderPage title="Órdenes — Módulo 7" />
+                  <OrdersPage />
                 </ProtectedRoute>
               }
             />
@@ -76,7 +87,7 @@ export default function AppRouter() {
               path="/orders/:id"
               element={
                 <ProtectedRoute>
-                  <PlaceholderPage title="Detalle de orden — Módulo 7" />
+                  <OrderDetailPage />
                 </ProtectedRoute>
               }
             />
