@@ -34,9 +34,9 @@ export function SortSelect() {
   return (
     <div className="flex items-center gap-2">
       <span className="shrink-0 text-sm text-muted-foreground">Ordenar por</span>
-      <Select value={ordering} onChange={(e) => handleChange(e.target.value)}>
+      <Select value={ordering} onValueChange={handleChange}>
         <SelectTrigger className="w-40">
-          <SelectValue placeholder="Seleccionar" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {SORT_OPTIONS.map((opt) => (

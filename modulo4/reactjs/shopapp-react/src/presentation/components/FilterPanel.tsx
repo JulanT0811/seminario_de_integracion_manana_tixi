@@ -54,13 +54,15 @@ export function FilterPanel({ className }: FilterPanelProps) {
 
   return (
     <>
+      {/* Sidebar visible en escritorio */}
       <aside className={`hidden lg:block ${className ?? ''}`}>
         <FilterContent />
       </aside>
 
+      {/* Botón + Sheet visible en móvil */}
       <div className="lg:hidden">
         <Sheet>
-          <SheetTrigger>
+          <SheetTrigger asChild>
             <Button variant="outline" size="sm" className="relative">
               <SlidersHorizontal className="mr-2 h-4 w-4" />
               Filtros

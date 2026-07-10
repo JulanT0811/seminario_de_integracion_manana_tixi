@@ -1,3 +1,4 @@
+// src/presentation/store/catalog.store.ts
 import { create } from 'zustand'
 import { categoryUseCase } from '@/infrastructure/factories/category.factory'
 import { productUseCase } from '@/infrastructure/factories/product.factory'

@@ -60,6 +60,7 @@ export function CartDrawer() {
           </div>
         ) : (
           <>
+            {/* Lista de ítems con scroll */}
             <ScrollArea className="flex-1 py-4">
               <ul className="space-y-4 pr-4">
                 {items.map((item) => (

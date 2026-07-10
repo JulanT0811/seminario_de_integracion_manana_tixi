@@ -1,12 +1,12 @@
-    // src/application/use-cases/auth.use-case.ts
-    import type { AuthRepository, AuthSession } from '@/domain/ports/auth.repository'
-    import type { LoginDto } from '../dtos/login.dto'
-    import type { RegisterDto } from '../dtos/register.dto'
+// src/application/use-cases/auth.use-case.ts
+import type { AuthRepository, AuthSession } from '@/domain/ports/auth.repository'
+import type { LoginDto } from '../dtos/login.dto'
+import type { RegisterDto } from '../dtos/register.dto'
 
-    export class AuthUseCase {
+export class AuthUseCase {
     private readonly authRepository: AuthRepository
 
-    constructor(authRepository: AuthRepository) { 
+    constructor(authRepository: AuthRepository) {
         this.authRepository = authRepository
     }
 
@@ -32,11 +32,11 @@
         if (!tokens) return null
 
         try {
-        const user = await this.authRepository.getCurrentUser()
-        return { user, tokens }
+            const user = await this.authRepository.getCurrentUser()
+            return { user, tokens }
         } catch {
-        this.authRepository.clearLocalSession()
-        return null
+            this.authRepository.clearLocalSession()
+            return null
         }
     }
 
@@ -44,4 +44,4 @@
     clearLocalSession(): void {
         this.authRepository.clearLocalSession()
     }
-    }
+}

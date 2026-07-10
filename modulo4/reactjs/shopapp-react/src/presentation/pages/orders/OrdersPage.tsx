@@ -10,7 +10,10 @@ import { useOrderStore } from '@/presentation/store/order.store'
 import { formatPrice, formatDate } from '@/presentation/utils/formatters'
 import { StatusBadge } from '@/presentation/components/StatusBadge'
 
+// `StandardPagination` de Django usa page_size=10 por defecto; el adapter no lo sobreescribe.
 const PAGE_SIZE = 10
+
+// ── Skeletons ────────────────────────────────────────────────────────────────
 
 function OrderCardSkeleton() {
   return (
@@ -29,9 +32,10 @@ function OrderCardSkeleton() {
   )
 }
 
+// ── Estado vacío ─────────────────────────────────────────────────────────────
+
 function EmptyOrders() {
   const navigate = useNavigate()
-
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-24 text-center">
       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
@@ -44,7 +48,7 @@ function EmptyOrders() {
         </p>
       </div>
       <button
-        className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
+        className="text-sm underline underline-offset-4 text-muted-foreground hover:text-foreground"
         onClick={() => navigate('/catalog')}
       >
         Ver catálogo
@@ -52,6 +56,8 @@ function EmptyOrders() {
     </div>
   )
 }
+
+// ── Página principal ─────────────────────────────────────────────────────────
 
 export default function OrdersPage() {
   const navigate = useNavigate()

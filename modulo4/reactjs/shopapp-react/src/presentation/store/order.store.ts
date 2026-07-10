@@ -57,6 +57,16 @@ export const useOrderStore = create<OrderState & OrderActions>((set) => ({
     set({ currentPage: page })
   },
 
+  /**
+   * Convierte el carrito en una orden siguiendo el flujo granular real del backend:
+   * 1) crea una orden vacía en estado `pending`,
+   * 2) agrega cada ítem del carrito uno por uno, **secuencialmente** (no con `Promise.all`),
+   *    porque cada `add-item` descuenta stock y recalcula `total` en el servidor — dispararlos en
+   *    paralelo arriesgaría condiciones de carrera sobre la misma orden,
+   * 3) confirma la orden, que la deja en `confirmed` con el total ya calculado.
+   * Si algún paso falla (p. ej. stock insuficiente en `add-item`), la orden queda a medio construir
+   * en estado `pending` en el backend; se relanza el error para que `CheckoutPage` lo muestre.
+   */
   async placeOrder(cartItems) {
     set({ isLoading: true, error: null })
     try {
@@ -76,6 +86,7 @@ export const useOrderStore = create<OrderState & OrderActions>((set) => ({
         currentOrder: order,
       }))
 
+      // Vacía el carrito una vez que la orden se confirmó en el backend
       useCartStore.getState().clearCart()
 
       return order

@@ -18,7 +18,9 @@ export function CategoryFilter({ layout = 'horizontal' }: CategoryFilterProps) {
   }
 
   const containerClass =
-    layout === 'vertical' ? 'flex flex-col gap-1' : 'flex gap-2 overflow-x-auto pb-2 scrollbar-thin'
+    layout === 'vertical'
+      ? 'flex flex-col gap-1'
+      : 'flex gap-2 overflow-x-auto pb-2 scrollbar-thin'
 
   const buttonClass = layout === 'vertical' ? 'justify-start' : 'shrink-0'
 
@@ -38,7 +40,10 @@ export function CategoryFilter({ layout = 'horizontal' }: CategoryFilterProps) {
           key={cat.id}
           variant={filters.categoryId === cat.id ? 'default' : 'ghost'}
           size="sm"
-          className={cn(buttonClass, filters.categoryId === cat.id && 'pointer-events-none')}
+          className={cn(
+            buttonClass,
+            filters.categoryId === cat.id && 'pointer-events-none',
+          )}
           onClick={() => handleSelect(cat.id)}
         >
           {cat.name}

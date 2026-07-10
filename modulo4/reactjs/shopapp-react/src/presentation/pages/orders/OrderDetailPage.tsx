@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 
 import { Button } from '@/presentation/components/ui/button'
@@ -18,6 +18,8 @@ import { useOrderStore } from '@/presentation/store/order.store'
 import { formatPrice, formatDate } from '@/presentation/utils/formatters'
 import { StatusBadge } from '@/presentation/components/StatusBadge'
 import type { OrderStatus } from '@/domain/enums/order-status.enum'
+
+// ── Línea de tiempo de estado ─────────────────────────────────────────────────
 
 const STATUS_STEPS: { status: OrderStatus; label: string }[] = [
   { status: 'pending', label: 'Recibido' },
@@ -85,6 +87,8 @@ function StatusTimeline({ currentStatus }: StatusTimelineProps) {
   )
 }
 
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+
 function OrderDetailSkeleton() {
   return (
     <div className="container max-w-3xl py-8">
@@ -98,6 +102,8 @@ function OrderDetailSkeleton() {
     </div>
   )
 }
+
+// ── Página principal ─────────────────────────────────────────────────────────
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -133,7 +139,9 @@ export default function OrderDetailPage() {
 
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-mono text-2xl font-bold">Pedido #{String(order.id).padStart(4, '0')}</h1>
+          <h1 className="font-mono text-2xl font-bold">
+            Pedido #{String(order.id).padStart(4, '0')}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Realizado el {formatDate(order.created_at)}
             {order.updated_at !== order.created_at && (
@@ -165,15 +173,23 @@ export default function OrderDetailPage() {
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md border bg-muted">
                       {item.product.image_url && (
-                        <img src={item.product.image_url} alt={item.product.name} className="h-full w-full object-cover" />
+                        <img
+                          src={item.product.image_url}
+                          alt={item.product.name}
+                          className="h-full w-full object-cover"
+                        />
                       )}
                     </div>
                     {item.product.name}
                   </div>
                 </TableCell>
                 <TableCell className="text-right tabular-nums">{item.quantity}</TableCell>
-                <TableCell className="text-right tabular-nums">{formatPrice(item.unit_price)}</TableCell>
-                <TableCell className="text-right tabular-nums">{formatPrice(item.subtotal)}</TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatPrice(item.unit_price)}
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatPrice(item.subtotal)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

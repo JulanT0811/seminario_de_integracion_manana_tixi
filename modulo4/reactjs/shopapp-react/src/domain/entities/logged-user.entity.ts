@@ -2,8 +2,8 @@
 
 /** Usuario autenticado tal como lo devuelve el endpoint /auth/me/ */
 export interface LoggedUser {
-  user_id: number
-  username: string
-  email: string
-  is_staff: boolean
+    user_id: number
+    username: string
+    email: string
+    is_staff: boolean
 }

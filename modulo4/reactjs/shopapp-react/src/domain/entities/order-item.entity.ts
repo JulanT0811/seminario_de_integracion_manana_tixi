@@ -1,7 +1,8 @@
 import type { ProductSummary } from './product-summary.entity'
 
 /**
- * Un ítem dentro de una orden ya creada.
+ * Un ítem dentro de una orden ya creada. `product` es el objeto anidado que devuelve
+ * `OrderItemSerializer` (no un id suelto): el backend nunca envía un `product_name` plano.
  */
 export interface OrderItem {
   id: number

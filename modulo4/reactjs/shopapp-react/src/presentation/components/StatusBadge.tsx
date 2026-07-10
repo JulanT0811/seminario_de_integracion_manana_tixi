@@ -34,11 +34,15 @@ interface StatusBadgeProps {
   className?: string
 }
 
+/** Badge reutilizable que traduce un `OrderStatus` a etiqueta y color. */
 export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
   const config = STATUS_MAP[status]
 
   return (
-    <Badge variant="outline" className={[config.className, className].filter(Boolean).join(' ')}>
+    <Badge
+      variant="outline"
+      className={[config.className, className].filter(Boolean).join(' ')}
+    >
       {config.label}
     </Badge>
   )
