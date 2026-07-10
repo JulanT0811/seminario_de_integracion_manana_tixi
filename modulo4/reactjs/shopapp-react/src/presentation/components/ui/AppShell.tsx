@@ -14,6 +14,8 @@
     } from '@/presentation/components/ui/dropdown-menu'
     import { Avatar, AvatarFallback } from '@/presentation/components/ui/avatar'
     import { Separator } from '@/presentation/components/ui/separator'
+    import { useCartStore } from '@/presentation/store/cart.store'
+    import { CartDrawer } from '@/presentation/components/CartDrawer'
 
     // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -36,8 +38,8 @@
     const navigate = useNavigate()
     const { user, logout } = useAuthStore()
 
-    // En módulos siguientes esto vendrá del CartStore
-    const cartItemCount = 0
+    const cartItemCount = useCartStore((s) => s.itemCount())
+    const openCart = useCartStore((s) => s.openCart)
 
     async function handleLogout() {
         await logout()
@@ -92,11 +94,10 @@
                 <Button
                     variant="ghost"
                     size="icon"
-                    asChild
                     className="relative"
                     aria-label="Carrito de compras"
+                    onClick={() => openCart()}
                 >
-                    <Link to="/cart">
                     <ShoppingCart className="h-5 w-5" />
                     {cartItemCount > 0 && (
                         <Badge
@@ -106,7 +107,6 @@
                         {cartItemCount > 99 ? '99+' : cartItemCount}
                         </Badge>
                     )}
-                    </Link>
                 </Button>
                 )}
 
@@ -198,6 +198,7 @@
         <footer className="border-t py-4 text-center text-sm text-muted-foreground">
             ShopApp &copy; {new Date().getFullYear()}
         </footer>
+        <CartDrawer />
         </div>
     )
     }

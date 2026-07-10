@@ -1,20 +1,37 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { ArrowLeft, Minus, Plus, ShoppingBag, ShoppingCart } from 'lucide-react'
 import { productUseCase } from '@/infrastructure/factories/product.factory'
+import { useCartStore } from '@/presentation/store/cart.store'
 import type { Product } from '@/domain/entities/product.entity'
 import { formatPrice } from '@/presentation/utils/formatters'
 import { Badge } from '@/presentation/components/ui/badge'
 import { Button } from '@/presentation/components/ui/button'
 import { Skeleton } from '@/presentation/components/ui/skeleton'
 
+function QuantitySelector({ value, min = 1, max, onChange }: { value: number; min?: number; max: number; onChange: (value: number) => void }) {
+  return (
+    <div className="flex items-center rounded-md border">
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-none rounded-l-md" onClick={() => onChange(Math.max(min, value - 1))} disabled={value <= min} aria-label="Reducir cantidad">
+        <Minus className="h-4 w-4" />
+      </Button>
+      <span className="flex h-10 w-12 items-center justify-center text-sm font-medium tabular-nums">{value}</span>
+      <Button variant="ghost" size="icon" className="h-10 w-10 rounded-none rounded-r-md" onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max} aria-label="Aumentar cantidad">
+        <Plus className="h-4 w-4" />
+      </Button>
+    </div>
+  )
+}
+
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const addItem = useCartStore((s) => s.addItem)
 
   const [product, setProduct] = useState<Product | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [quantity, setQuantity] = useState(1)
 
   useEffect(() => {
     if (!id) return
@@ -24,10 +41,19 @@ export default function ProductDetailPage() {
 
     productUseCase
       .getProduct(Number(id))
-      .then((data) => setProduct(data))
+      .then((data) => {
+        setProduct(data)
+        setQuantity(1)
+      })
       .catch(() => setError('No se pudo cargar el producto.'))
       .finally(() => setIsLoading(false))
   }, [id])
+
+  function handleAddToCart() {
+    if (!product) return
+    addItem(product, quantity)
+    globalThis.alert(`Agregado al carrito: ${quantity} × ${product.name}`)
+  }
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-6">
@@ -78,10 +104,13 @@ export default function ProductDetailPage() {
 
             <p className="text-sm leading-relaxed text-muted-foreground">{product.description}</p>
 
-            <Button size="lg" className="mt-auto" disabled={product.stock === 0} title="Disponible en el módulo 6">
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Agregar al carrito
-            </Button>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <QuantitySelector value={quantity} min={1} max={product.stock} onChange={setQuantity} />
+              <Button className="flex-1 gap-2" size="lg" disabled={product.stock === 0} onClick={handleAddToCart}>
+                <ShoppingCart className="h-5 w-5" />
+                {product.stock > 0 ? 'Agregar al carrito' : 'Agotado'}
+              </Button>
+            </div>
           </div>
         </div>
       )}

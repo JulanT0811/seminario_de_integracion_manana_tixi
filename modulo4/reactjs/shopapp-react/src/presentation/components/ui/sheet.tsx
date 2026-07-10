@@ -6,10 +6,20 @@ import { X } from 'lucide-react'
 
 interface SheetProps {
   children: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-function Sheet({ children }: SheetProps) {
-  const [open, setOpen] = React.useState(false)
+function Sheet({ children, open: controlledOpen, onOpenChange }: SheetProps) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false)
+  const open = controlledOpen ?? uncontrolledOpen
+
+  const setOpen = (next: boolean) => {
+    if (controlledOpen === undefined) {
+      setUncontrolledOpen(next)
+    }
+    onOpenChange?.(next)
+  }
 
   return <div>{React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
@@ -53,8 +63,12 @@ function SheetHeader({ className, children }: { className?: string; children: Re
   return <div className={cn('mb-2', className)}>{children}</div>
 }
 
-function SheetTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-lg font-semibold">{children}</h2>
+function SheetTitle({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <h2 className={cn('text-lg font-semibold', className)}>{children}</h2>
 }
 
-export { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle }
+function SheetFooter({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn('mt-auto flex flex-col gap-2', className)}>{children}</div>
+}
+
+export { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetFooter }
