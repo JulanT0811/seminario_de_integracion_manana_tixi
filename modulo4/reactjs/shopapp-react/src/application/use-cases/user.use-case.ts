@@ -5,7 +5,11 @@ import type { UpdateProfileDto } from '@/application/dtos/update-profile.dto'
 import type { UserStats } from '@/domain/entities/user-stats.entity'
 
 export class UserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  private readonly userRepository: UserRepository
+
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository
+  }
 
   getProfile(): Promise<UserProfile> {
     return this.userRepository.getProfile()

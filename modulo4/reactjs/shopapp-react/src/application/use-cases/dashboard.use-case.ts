@@ -5,12 +5,22 @@ import type { UserUseCase } from './user.use-case'
 import type { AdminStats } from '@/domain/entities/admin-stats.entity'
 
 export class DashboardUseCase {
+  private readonly categoryUseCase: CategoryUseCase
+  private readonly productUseCase: ProductUseCase
+  private readonly orderUseCase: OrderUseCase
+  private readonly userUseCase: UserUseCase
+
   constructor(
-    private readonly categoryUseCase: CategoryUseCase,
-    private readonly productUseCase: ProductUseCase,
-    private readonly orderUseCase: OrderUseCase,
-    private readonly userUseCase: UserUseCase,
-  ) {}
+    categoryUseCase: CategoryUseCase,
+    productUseCase: ProductUseCase,
+    orderUseCase: OrderUseCase,
+    userUseCase: UserUseCase,
+  ) {
+    this.categoryUseCase = categoryUseCase
+    this.productUseCase = productUseCase
+    this.orderUseCase = orderUseCase
+    this.userUseCase = userUseCase
+  }
 
   async getStats(): Promise<AdminStats> {
     const [categoryStats, productStats, orderStats, userStats] = await Promise.all([
