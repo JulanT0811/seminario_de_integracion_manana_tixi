@@ -1,4 +1,3 @@
-// src/application/use-cases/dashboard.use-case.ts
 import type { CategoryUseCase } from './category.use-case'
 import type { ProductUseCase } from './product.use-case'
 import type { OrderUseCase } from './order.use-case'

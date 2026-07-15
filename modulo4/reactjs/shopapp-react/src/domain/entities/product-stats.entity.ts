@@ -1,5 +1,3 @@
-// src/domain/entities/product-stats.entity.ts
-
 export interface ProductStats {
   total_active: number
   avg_price: number | null

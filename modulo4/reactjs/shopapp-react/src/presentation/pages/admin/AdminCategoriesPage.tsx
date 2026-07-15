@@ -1,4 +1,3 @@
-// src/presentation/pages/admin/AdminCategoriesPage.tsx
 import { useEffect, useState } from 'react'
 import { Pencil, Trash2, Plus, FolderOpen } from 'lucide-react'
 import { toast } from 'sonner'

@@ -1,4 +1,3 @@
-// src/infrastructure/factories/dashboard.factory.ts
 import { DashboardUseCase } from '@/application/use-cases/dashboard.use-case'
 import { categoryUseCase } from './category.factory'
 import { productUseCase } from './product.factory'

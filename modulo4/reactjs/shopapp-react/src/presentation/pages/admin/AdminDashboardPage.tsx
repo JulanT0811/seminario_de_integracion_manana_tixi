@@ -1,4 +1,3 @@
-// src/presentation/pages/admin/AdminDashboardPage.tsx
 import { useEffect } from 'react'
 import { Package, Tag, ShoppingCart, Users, Clock, AlertTriangle } from 'lucide-react'
 

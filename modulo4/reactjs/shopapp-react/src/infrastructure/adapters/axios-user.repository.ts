@@ -2,6 +2,7 @@ import { apiClient } from '@/infrastructure/http/axios-client'
 import { parseApiError } from '@/infrastructure/http/parse-api-error'
 import type { UserRepository } from '@/domain/ports/user.repository'
 import type { UserProfile } from '@/domain/entities/user-profile.entity'
+
 import type { UserStats } from '@/domain/entities/user-stats.entity'
 
 export class AxiosUserRepository implements UserRepository {

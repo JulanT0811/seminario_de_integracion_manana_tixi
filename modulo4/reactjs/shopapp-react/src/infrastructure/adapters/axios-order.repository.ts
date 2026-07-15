@@ -3,6 +3,7 @@ import { parseApiError } from '@/infrastructure/http/parse-api-error'
 import type { OrderRepository } from '@/domain/ports/order.repository'
 import type { Order } from '@/domain/entities/order.entity'
 import type { PaginatedResult } from '@/domain/entities/paginated-result.entity'
+
 import type { OrderStats } from '@/domain/entities/order-stats.entity'
 
 export class AxiosOrderRepository implements OrderRepository {

@@ -1,4 +1,3 @@
-// src/presentation/components/admin/DeleteConfirmDialog.tsx
 import {
   AlertDialog,
   AlertDialogAction,

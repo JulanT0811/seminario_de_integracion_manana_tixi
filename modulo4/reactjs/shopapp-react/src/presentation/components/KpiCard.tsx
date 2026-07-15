@@ -1,4 +1,3 @@
-// src/presentation/components/KpiCard.tsx
 import type { LucideIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import { cn } from '@/presentation/utils/cn'

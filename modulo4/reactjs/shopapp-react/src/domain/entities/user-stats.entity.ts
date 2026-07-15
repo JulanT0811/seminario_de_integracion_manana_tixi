@@ -1,5 +1,3 @@
-// src/domain/entities/user-stats.entity.ts
-
 export interface UserStats {
   total: number
   active: number

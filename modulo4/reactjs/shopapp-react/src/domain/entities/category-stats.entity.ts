@@ -1,5 +1,3 @@
-// src/domain/entities/category-stats.entity.ts
-
 export interface CategoryStatDetail {
   id: number
   name: string

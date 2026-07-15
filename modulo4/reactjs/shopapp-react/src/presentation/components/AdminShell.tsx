@@ -1,4 +1,3 @@
-// src/presentation/components/AdminShell.tsx
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { LayoutDashboard, Tag, Package, ShoppingCart, Users, Menu, ArrowLeft } from 'lucide-react'

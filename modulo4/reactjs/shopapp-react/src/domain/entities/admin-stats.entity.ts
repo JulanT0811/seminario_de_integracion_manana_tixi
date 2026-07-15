@@ -1,5 +1,3 @@
-// src/domain/entities/admin-stats.entity.ts
-
 export interface AdminStats {
   total_products: number
   total_categories: number
