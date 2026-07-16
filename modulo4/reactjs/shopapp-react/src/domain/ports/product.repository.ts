@@ -29,6 +29,7 @@ export interface ProductRepository {
       is_active: boolean
     }>,
   ): Promise<Product>
+  uploadImage(id: number, file: File): Promise<Product>
   deleteProduct(id: number): Promise<void>
   restockProduct(id: number, quantity: number): Promise<{ id: number; name: string; new_stock: number }>
 }

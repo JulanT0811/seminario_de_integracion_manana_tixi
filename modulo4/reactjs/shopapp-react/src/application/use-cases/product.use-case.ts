@@ -36,6 +36,10 @@ export class ProductUseCase {
         return this.productRepository.updateProduct(id, dto)
     }
 
+    uploadImage(id: number, file: File): Promise<Product> {
+        return this.productRepository.uploadImage(id, file)
+    }
+
     deleteProduct(id: number): Promise<void> {
         return this.productRepository.deleteProduct(id)
     }

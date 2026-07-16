@@ -71,6 +71,18 @@ export class AxiosProductRepository implements ProductRepository {
         }
     }
 
+    async uploadImage(id: number, file: File): Promise<Product> {
+        const formData = new FormData()
+        formData.append('image', file)
+
+        try {
+            const { data } = await apiClient.patch<Product>(`/products/${id}/`, formData)
+            return data
+        } catch (err) {
+            throw parseApiError(err)
+        }
+    }
+
     async deleteProduct(id: number): Promise<void> {
         try {
             await apiClient.delete(`/products/${id}/`)

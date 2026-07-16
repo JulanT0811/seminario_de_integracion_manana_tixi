@@ -17,6 +17,18 @@ export class AxiosUserRepository implements UserRepository {
     }
   }
 
+  async uploadAvatar(file: File): Promise<UserProfile> {
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    try {
+      const { data } = await apiClient.patch<UserProfile>('/users/profile/', formData)
+      return data
+    } catch (err) {
+      throw parseApiError(err)
+    }
+  }
+
   async updateProfile(payload: {
     first_name?: string
     last_name?: string

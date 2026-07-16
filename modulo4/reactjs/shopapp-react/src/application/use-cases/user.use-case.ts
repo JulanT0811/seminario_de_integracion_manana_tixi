@@ -17,6 +17,10 @@ export class UserUseCase {
     return this.userRepository.getProfile()
   }
 
+  uploadAvatar(file: File): Promise<UserProfile> {
+    return this.userRepository.uploadAvatar(file)
+  }
+
   updateProfile(dto: UpdateProfileDto): Promise<UserProfile> {
     return this.userRepository.updateProfile(dto)
   }

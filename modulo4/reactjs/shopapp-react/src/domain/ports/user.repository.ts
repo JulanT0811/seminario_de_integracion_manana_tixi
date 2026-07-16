@@ -5,6 +5,7 @@ import type { UserStats } from '../entities/user-stats.entity'
 
 export interface UserRepository {
   getProfile(): Promise<UserProfile>
+  uploadAvatar(file: File): Promise<UserProfile>
   updateProfile(payload: {
     first_name?: string
     last_name?: string
