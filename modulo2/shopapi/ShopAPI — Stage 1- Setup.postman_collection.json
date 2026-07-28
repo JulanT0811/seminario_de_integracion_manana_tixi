@@ -1,0 +1,1748 @@
+{
+  "info": {
+    "_postman_id": "8873f25a-0722-43f3-80cc-55362b6e1da0",
+    "name": "ShopAPI — Stage 1: Setup",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44934855",
+    "_collection_link": "https://go.postman.co/collection/44934855-8873f25a-0722-43f3-80cc-55362b6e1da0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set('access',  j.access);",
+                  "pm.collectionVariables.set('refresh', j.refresh);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"email\": \"john@test.com\",\n  \"password\": \"Pass1234!\",\n  \"password2\": \"Pass1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set('access',  j.access);",
+                  "pm.collectionVariables.set('refresh', j.refresh);",
+                  "pm.environment.set('access',  j.access);",
+                  "pm.environment.set('refresh', j.refresh);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin1234!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.collectionVariables.set('access',  j.access);",
+                  "pm.collectionVariables.set('refresh', j.refresh);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "refresh",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "── PARADA 1: Avatar ──",
+          "item": [
+            {
+              "name": "Register user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                      "const j = pm.response.json();",
+                      "if (j.access) {",
+                      "  pm.collectionVariables.set('access',  j.access);",
+                      "  pm.collectionVariables.set('refresh', j.refresh);",
+                      "  pm.environment.set('access',  j.access);",
+                      "  pm.environment.set('refresh', j.refresh);",
+                      "  console.log('Tokens guardados desde register');",
+                      "} else {",
+                      "  console.warn('Register no devolvio tokens. Usa Auth > Login manualmente.');",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"ana\",\n  \"email\": \"ana@test.com\",\n  \"password\": \"test1234!!\",\n  \"password2\": \"test1234!!\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get profile (avatar_url: null)",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "const token = pm.collectionVariables.get('access') || pm.environment.get('access');",
+                      "if (!token) {",
+                      "  console.error('⚠ {{access}} esta vacio. Ejecuta Auth > Login o Register user primero.');",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                      "const j = pm.response.json();",
+                      "pm.test('avatar_url es null', () => pm.expect(j.avatar_url).to.be.null);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/users/profile/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users",
+                    "profile",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload avatar",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                      "const j = pm.response.json();",
+                      "pm.test('avatar_url present', () => pm.expect(j.avatar_url).to.not.be.null);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "avatar",
+                      "type": "file",
+                      "description": "Seleccionar archivo .jpg / .png / .webp (max 2 MB)",
+                      "value": ""
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/users/profile/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users",
+                    "profile",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload avatar — tipo invalido (expect 400)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status 400', () => pm.response.to.have.status(400));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "avatar",
+                      "type": "file",
+                      "description": "Seleccionar un archivo .pdf o imagen > 2 MB para probar validacion",
+                      "value": ""
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/users/profile/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "users",
+                    "profile",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get my profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/profile/?Authorization=Bearer {{access}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update my profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"Pass1234!\",\n  \"new_password\": \"New5678!\",\n  \"new_password2\": \"New5678!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/change-password/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "change-password",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] List users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}} users/?search=john&is_active=true&ordering=username",
+              "host": [
+                "{{base_url}} users"
+              ],
+              "path": [
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true"
+                },
+                {
+                  "key": "ordering",
+                  "value": "username"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Create user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mary\",\n  \"email\": \"mary@test.com\",\n  \"password\": \"Pass1234!\",\n  \"first_name\": \"Mary\",\n  \"last_name\": \"Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Toggle active",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/2/toggle-active/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "2",
+                "toggle-active",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List — filter active",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "?is_active=true&ordering=name",
+              "query": [
+                {
+                  "key": "is_active",
+                  "value": "true"
+                },
+                {
+                  "key": "ordering",
+                  "value": "name"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "?search=electro",
+              "query": [
+                {
+                  "key": "search",
+                  "value": "electro"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Create category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('category_id', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"slug\": \"electronics\",\n  \"description\": \"Electronic devices and gadgets\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Update category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated description\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories/{{category_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "{{category_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Delete category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/{{category_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "{{category_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categories",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "── PARADA 2: Product image ──",
+          "item": [
+            {
+              "name": "Get product (image_url: null)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/products/{{product_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{product_id}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload product image (staff)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/path/to/product.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/products/{{product_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{product_id}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Upload oversized image (expect 400)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "src": "/path/to/large_file.jpg"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/products/{{product_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "products",
+                    "{{product_id}}",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by price range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/?price_min=100&price_max=500&ordering=-price",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "price_min",
+                  "value": "100"
+                },
+                {
+                  "key": "price_max",
+                  "value": "500"
+                },
+                {
+                  "key": "ordering",
+                  "value": "-price"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by category and stock",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/category/?category={{category_id}}&stock_min=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "category",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "{{category_id}}"
+                },
+                {
+                  "key": "stock_min",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search product",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "?search=laptop",
+              "query": [
+                {
+                  "key": "search",
+                  "value": "laptop"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Create product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('product_id', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"HP Laptop 15\",\n  \"description\": \"General purpose laptop\",\n  \"price\": \"850.00\",\n  \"stock\": 10,\n  \"is_active\": true,\n  \"category_id\": {{category_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Restock",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 25\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/{{product_id}}/restock/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "{{product_id}}",
+                "restock",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Available (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/available/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "available",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Update product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": \"799.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/products/{{product_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "{{product_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "products",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('order_id', pm.response.json().id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add item to order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": {{product_id}},\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/add-item/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "add-item",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get order detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/confirm/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "confirm",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List my orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}} /orders/?status=confirmed",
+              "host": [
+                "{{base_url}} "
+              ],
+              "path": [
+                "orders",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "confirmed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by date range",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}} /orders/?from_date=2025-01-01&to_date=2025-12-31",
+              "host": [
+                "{{base_url}} "
+              ],
+              "path": [
+                "orders",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "from_date",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "to_date",
+                  "value": "2025-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Update status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/{{order_id}}/update-status/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "{{order_id}}",
+                "update-status",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Staff] Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/stats/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "orders",
+                "stats",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Email",
+      "item": [
+        {
+          "name": "── PARADA 1: Bienvenida ──",
+          "item": [
+            {
+              "name": "Register (triggers welcome email)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status 201 — usuario creado y correo enviado', () => pm.response.to.have.status(201));",
+                      "const j = pm.response.json();",
+                      "if (j.access) {",
+                      "  pm.collectionVariables.set('access',  j.access);",
+                      "  pm.collectionVariables.set('refresh', j.refresh);",
+                      "  pm.environment.set('access',  j.access);",
+                      "  pm.environment.set('refresh', j.refresh);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"francisco_higuera\",\n  \"email\": \"francisco.higuera@ute.edu.ec\",\n  \"password\": \"Admin1234!!\",\n  \"password2\": \"Admin1234!!\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "register",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "── PARADA 2: Reset de contraseña ──",
+          "item": [
+            {
+              "name": "Request password reset",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"tu_correo@gmail.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/password-reset/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "password-reset",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Confirm password reset",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"{{reset_uid}}\",\n  \"token\": \"{{reset_token}}\",\n  \"new_password\": \"nuevapass123\",\n  \"new_password2\": \"nuevapass123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/password-reset/confirm/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "password-reset",
+                    "confirm",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Confirm reset with invalid token (expect 400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"uid\": \"{{reset_uid}}\",\n  \"token\": \"invalid-token-000\",\n  \"new_password\": \"nuevapass123\",\n  \"new_password2\": \"nuevapass123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/password-reset/confirm/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "password-reset",
+                    "confirm",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login with new password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"carlos\",\n  \"password\": \"nuevapass123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Request reset for non-existent email (expect 200)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"noexiste@ejemplo.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/auth/password-reset/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "password-reset",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "── PARADA 3: Confirmación de orden ──",
+          "item": [
+            {
+              "name": "Create order (triggers confirmation email)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/orders/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "orders",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('status is ok', () => {",
+              "  pm.expect(pm.response.json().status).to.eql('ok');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "access",
+      "value": ""
+    },
+    {
+      "key": "refresh",
+      "value": ""
+    },
+    {
+      "key": "category_id",
+      "value": ""
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    },
+    {
+      "key": "order_id",
+      "value": ""
+    },
+    {
+      "key": "reset_uid",
+      "value": ""
+    },
+    {
+      "key": "reset_token",
+      "value": ""
+    }
+  ]
+}

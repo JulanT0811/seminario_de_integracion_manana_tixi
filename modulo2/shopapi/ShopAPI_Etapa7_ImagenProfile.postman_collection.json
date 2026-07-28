@@ -1,0 +1,566 @@
+{
+	"info": {
+		"_postman_id": "shopapi-etapa7-imagen",
+		"name": "ShopAPI — Etapa 7: Avatar y Imagen Producto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"description": "Colección para probar avatares de usuario e imágenes de producto.\n\n**Flujo:**\n1. Ejecuta **Register** o **Login** (guarda automáticamente el token)\n2. Usa cualquier endpoint autenticado (Header Authorization se rellena automáticamente)"
+	},
+	"item": [
+		{
+			"name": "🔐 Auth",
+			"item": [
+				{
+					"name": "1️⃣ Register (nuevo usuario)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 201 Created', () => pm.response.to.have.status(201));",
+									"const j = pm.response.json();",
+									"pm.collectionVariables.set('access',  j.access);",
+									"pm.collectionVariables.set('refresh', j.refresh);",
+									"pm.collectionVariables.set('user_id', j.user_id);",
+									"console.log('✅ Token guardado. Usuario ID:', j.user_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"ana\",\n  \"email\": \"ana@test.com\",\n  \"password\": \"Test1234!\",\n  \"password2\": \"Test1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2️⃣ Login (usuario existente)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200 OK', () => pm.response.to.have.status(200));",
+									"const j = pm.response.json();",
+									"pm.collectionVariables.set('access',  j.access);",
+									"pm.collectionVariables.set('refresh', j.refresh);",
+									"pm.collectionVariables.set('user_id', j.user_id);",
+									"console.log('✅ Token actualizado. Usuario:', j.username);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"ana\",\n  \"password\": \"Test1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+									"const j = pm.response.json();",
+									"pm.collectionVariables.set('access',  j.access);",
+									"console.log('✅ Token refrescado');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/token/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+									"console.log('✅ Sesión cerrada');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refresh}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👤 Perfil & Avatar",
+			"item": [
+				{
+					"name": "🚦 1. Ver mi perfil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+									"const j = pm.response.json();",
+									"console.log('Username:', j.username);",
+									"console.log('Avatar URL:', j.avatar_url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/users/profile/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🚦 2. Subir avatar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+									"const j = pm.response.json();",
+									"if (j.avatar_url) {",
+									"  console.log('✅ Avatar URL:', j.avatar_url);",
+									"  console.log('Abre en navegador para ver la imagen →', j.avatar_url);",
+									"} else {",
+									"  console.log('❌ avatar_url no aparece en respuesta');\n}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/users/profile/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar datos perfil",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Ana\",\n  \"last_name\": \"García\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/profile/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar contraseña",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"Test1234!\",\n  \"new_password\": \"NewPass1234!\",\n  \"new_password2\": \"NewPass1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/change-password/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"change-password",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Productos & Imagen",
+			"item": [
+				{
+					"name": "Listar productos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Staff] Crear producto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 201', () => pm.response.to.have.status(201));",
+									"const j = pm.response.json();",
+									"pm.collectionVariables.set('product_id', j.id);",
+									"console.log('✅ Producto creado. ID:', j.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Laptop HP 15\",\n  \"description\": \"Laptop para desarrollo\",\n  \"price\": \"850.00\",\n  \"stock\": 10,\n  \"is_active\": true,\n  \"category_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🚦 3. Subir imagen de producto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+									"const j = pm.response.json();",
+									"if (j.image_url) {",
+									"  console.log('✅ Imagen URL:', j.image_url);",
+									"  console.log('Abre en navegador para ver la imagen →', j.image_url);",
+									"} else {",
+									"  console.log('❌ image_url no aparece en respuesta');\n}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/products/{{product_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"{{product_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔍 Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('✅ Status 200', () => pm.response.to.have.status(200));",
+							"pm.test('status is ok', () => {",
+							"  pm.expect(pm.response.json().status).to.eql('ok');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/health/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "access",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
